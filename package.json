@@ -1,0 +1,14 @@
+{
+  "name": "chefsplaceserver",
+  "version": "1.0.0",
+  "description": "Backend of chefsplace react native mobile app.",
+  "main": "src/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "dariy kutelov",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
