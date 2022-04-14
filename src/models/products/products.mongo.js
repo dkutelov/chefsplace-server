@@ -50,12 +50,10 @@ const productSchema = new Schema({
       },
     ],
   },
-  categoryId: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Categories",
-    },
-  ],
+  categoryId: {
+    type: Schema.Types.ObjectId,
+    ref: "Categories",
+  },
   onPromotion: Boolean,
   maxQuantity: {
     type: Number,
