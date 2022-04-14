@@ -9,6 +9,10 @@ const categorySchema = new Schema({
     type: String,
     required: true,
   },
+  position: {
+    type: Number,
+    required: true,
+  },
 });
 
 module.exports = model("Categories", categorySchema);
