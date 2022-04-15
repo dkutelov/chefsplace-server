@@ -50,7 +50,7 @@ const productSchema = new Schema({
       },
     ],
   },
-  categoryId: {
+  category: {
     type: Schema.Types.ObjectId,
     ref: "Categories",
   },

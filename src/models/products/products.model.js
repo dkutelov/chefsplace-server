@@ -7,7 +7,7 @@ async function getAllProducts() {
       {
         name: 1,
         images: 1,
-        categoryId: 1,
+        category: 1,
         price: 1,
         reducedPrice: 1,
         onPromotion: 1,
@@ -15,12 +15,12 @@ async function getAllProducts() {
       }
     )
     .sort({ created: -1 });
-  console.log(productData);
+
   productData = productData.map((p) => ({
     id: p._id,
     name: p.name,
     mainImage: p.images[0] || "",
-    categoryId: p.categoryId,
+    category: p.category,
     price: p.price,
     reducedPrice: p.reducedPrice,
     onPromotion: p.onPromotion,
@@ -28,6 +28,13 @@ async function getAllProducts() {
   }));
 
   return productData;
+}
+
+async function getProductById(id) {
+  let product = await products
+    .findById({ _id: id }, { __v: 0 })
+    .populate("category");
+  return product;
 }
 
 async function saveProduct(product) {
@@ -50,5 +57,6 @@ async function saveProduct(product) {
 
 module.exports = {
   getAllProducts,
+  getProductById,
   saveProduct,
 };
