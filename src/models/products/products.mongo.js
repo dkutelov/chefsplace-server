@@ -64,6 +64,14 @@ const productSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  barCode: {
+    type: String,
+    trim: true,
+  },
+  productCode: {
+    type: String,
+    trim: true,
+  },
 });
 
 module.exports = model("Products", productSchema);
