@@ -1,4 +1,5 @@
 const User = require("./user.mongo");
+const Address = require("./address.mongo");
 
 function transformProfile(p) {
   return {
@@ -37,7 +38,18 @@ async function findProfileById(id) {
   }
 }
 
+async function createDeliveryAddress(userId, address) {
+  const newAddress = await Address.create({ ...address });
+
+  await User.updateOne(
+    { _id: userId },
+    { $push: { deliveryAddress: newAddress._id } }
+  );
+  return newAddress;
+}
+
 module.exports = {
   createProfile,
   findProfileById,
+  createDeliveryAddress,
 };
