@@ -2,9 +2,9 @@ const express = require("express");
 
 const userRouter = express.Router();
 
-const { httpCreateProfile } = require("./user.controller");
+const { httpCreateProfile, httpGetProfile } = require("./user.controller");
 
-//userRouter.get("/", httpGetAllCategories);
+userRouter.get("/", httpGetProfile);
 userRouter.post("/", httpCreateProfile);
 
 module.exports = userRouter;
