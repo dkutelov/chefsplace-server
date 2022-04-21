@@ -30,7 +30,9 @@ async function createProfile(profile) {
 
 async function findProfileById(id) {
   try {
-    const profile = await User.findOne({ uid: id }, { __v: 0 });
+    const profile = await User.findOne({ uid: id }, { __v: 0 }).populate(
+      "deliveryAddress"
+    );
     return { profile };
   } catch (error) {
     console.log(error);
@@ -38,8 +40,28 @@ async function findProfileById(id) {
   }
 }
 
+async function removeDefaultAddress(userId, addressType) {
+  const user = await User.findOne({ _id: userId });
+
+  if (addressType === "delivery") {
+    const deliveryAddresses = user.deliveryAddress;
+
+    deliveryAddresses.forEach(async (addressId) => {
+      const address = await Address.updateOne(
+        { _id: addressId },
+        { isDefault: false }
+      );
+    });
+  }
+}
+
 async function createDeliveryAddress(userId, address) {
   const newAddress = await Address.create({ ...address });
+  console.log({ ...address });
+
+  if (address.isDefault) {
+    await removeDefaultAddress(userId, "delivery");
+  }
 
   await User.updateOne(
     { _id: userId },
