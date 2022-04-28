@@ -35,6 +35,12 @@ const userSchema = new Schema({
       ref: "Address",
     },
   ],
+  cart: [
+    {
+      productId: { type: Schema.Types.ObjectId, ref: "Products" },
+      quantity: { type: Number, min: 1, required: true },
+    },
+  ],
 });
 
 module.exports = model("User", userSchema);

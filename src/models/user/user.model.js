@@ -1,5 +1,6 @@
 const User = require("./user.mongo");
 const Address = require("./address.mongo");
+const Products = require("../products/products.mongo");
 
 function transformProfile(p) {
   return {
@@ -70,8 +71,54 @@ async function createDeliveryAddress(userId, address) {
   return newAddress;
 }
 
+async function createCartItem(userId, cartItem) {
+  //Validate user
+  const user = await User.findById(userId);
+
+  if (!user) {
+    return {
+      error: true,
+      message: "Няма такъв потребител!",
+    };
+  }
+
+  //Validate productId
+  const { productId } = cartItem;
+  const product = Products.findById(productId);
+
+  if (!product) {
+    return {
+      error: true,
+      message: "Няма такъв продукт!",
+    };
+  }
+
+  //Already in cart
+  const existingCartItem = user.cart.find((x) => x.productId === productId);
+
+  if (existingCartItem) {
+    const { quantity } = cartItem;
+    existingCartItem.quantity += quantity;
+    user.save();
+    return {
+      success: true,
+      message: "Продуктът е вече в количката! Количеството е актуализирано!",
+    };
+  } else {
+    const res = await User.updateOne(
+      { _id: userId },
+      { $push: { cart: cartItem } }
+    );
+    return {
+      success: true,
+      message: "Продуктът е добавен към количката!",
+    };
+  }
+}
+
 module.exports = {
   createProfile,
   findProfileById,
   createDeliveryAddress,
+  createCartItem,
 };
