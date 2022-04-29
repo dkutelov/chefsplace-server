@@ -29,9 +29,21 @@ async function createProfile(profile) {
   }
 }
 
+async function findProfileByUid(uid) {
+  try {
+    const profile = await User.findOne({ uid }, { __v: 0 }).populate(
+      "deliveryAddress"
+    );
+    return { profile };
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
 async function findProfileById(id) {
   try {
-    const profile = await User.findOne({ uid: id }, { __v: 0 }).populate(
+    const profile = await User.findById(id, { __v: 0 }).populate(
       "deliveryAddress"
     );
     return { profile };
@@ -58,7 +70,6 @@ async function removeDefaultAddress(userId, addressType) {
 
 async function createDeliveryAddress(userId, address) {
   const newAddress = await Address.create({ ...address });
-  console.log({ ...address });
 
   if (address.isDefault) {
     await removeDefaultAddress(userId, "delivery");
@@ -73,13 +84,20 @@ async function createDeliveryAddress(userId, address) {
 
 async function createCartItem(userId, cartItem) {
   //Validate user
-  const user = await User.findById(userId);
+  let user = null;
+  try {
+    user = await User.findById(userId);
 
-  if (!user) {
-    return {
-      error: true,
+    if (!user) {
+      return {
+        error: true,
+        message: "Няма такъв потребител!",
+      };
+    }
+  } catch (e) {
+    throw new Error({
       message: "Няма такъв потребител!",
-    };
+    });
   }
 
   //Validate productId
@@ -119,6 +137,7 @@ async function createCartItem(userId, cartItem) {
 module.exports = {
   createProfile,
   findProfileById,
+  findProfileByUid,
   createDeliveryAddress,
   createCartItem,
 };

@@ -1,13 +1,23 @@
 const {
   createProfile,
   findProfileById,
+  findProfileByUid,
   createDeliveryAddress,
   createCartItem,
 } = require("../../models/user/user.model");
 
 async function httpGetProfile(req, res) {
   const id = req.query.id;
-  const profile = await findProfileById(id);
+  const uid = req.query.uid;
+  let profile;
+  if (uid) {
+    profile = await findProfileByUid(uid);
+  }
+
+  if (id) {
+    profile = await findProfileById(id);
+  }
+
   if (profile) {
     return res.status(201).json(profile);
   } else {
@@ -36,15 +46,17 @@ async function httpCreateDeliveryAddress(req, res) {
 }
 
 async function httpAddCartItem(req, res) {
-   const { cartItem } = req.body;
+  const { cartItem } = req.body;
   const userId = req.params.userId;
-  console.log({userId});
-   const createdCartItem = await createCartItem(userId, cartItem);
-   if (createdCartItem) {
-     return res.status(201).json(createdCartItem);
-   } else {
-     return res.status(400).json({ error: "Грешка. Опитай отново!" });
-   }
+
+  try {
+    const createdCartItem = await createCartItem(userId, cartItem);
+    if (createdCartItem) {
+      return res.status(201).json(createdCartItem);
+    }
+  } catch (error) {
+    return res.status(400).json({ error });
+  }
 }
 
 module.exports = {
