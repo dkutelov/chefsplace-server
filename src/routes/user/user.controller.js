@@ -1,4 +1,5 @@
 const {
+  getUserById,
   createProfile,
   findProfileById,
   findProfileByUid,
@@ -59,9 +60,26 @@ async function httpAddCartItem(req, res) {
   }
 }
 
+async function httpUpdateCartItem(req, res) {}
+async function httpRemoveCartItem(req, res) {
+  console.log("hi");
+  const userId = req.params.userId;
+  try {
+    const user = await getUserById(userId);
+
+    if (!user) {
+      return res.status(500).json({ error: "Няма такъв потребител!" });
+    }
+  } catch (error) {
+    return res.status(500).json({ error });
+  }
+}
+
 module.exports = {
   httpCreateProfile,
   httpGetProfile,
   httpCreateDeliveryAddress,
   httpAddCartItem,
+  httpUpdateCartItem,
+  httpRemoveCartItem,
 };

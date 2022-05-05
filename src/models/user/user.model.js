@@ -82,6 +82,16 @@ async function createDeliveryAddress(userId, address) {
   return newAddress;
 }
 
+// User Cart
+
+async function getUserById(userId) {
+  try {
+    return await User.findById(userId);
+  } catch (e) {
+    throw new Error("Системна Грешка!");
+  }
+}
+
 async function createCartItem(userId, cartItem) {
   //Validate user
   let user = null;
@@ -134,10 +144,17 @@ async function createCartItem(userId, cartItem) {
   }
 }
 
+async function updateCartItem(userId, cartItem) {}
+
+async function removeCartItem(userId, cartItem) {}
+
 module.exports = {
+  getUserById,
   createProfile,
   findProfileById,
   findProfileByUid,
   createDeliveryAddress,
   createCartItem,
+  updateCartItem,
+  removeCartItem,
 };
