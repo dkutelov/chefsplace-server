@@ -5,6 +5,7 @@ const {
   findProfileByUid,
   createDeliveryAddress,
   createCartItem,
+  removeCartItem,
 } = require("../../models/user/user.model");
 
 async function httpGetProfile(req, res) {
@@ -46,6 +47,21 @@ async function httpCreateDeliveryAddress(req, res) {
   }
 }
 
+//Get user
+async function getUser(res, userId) {
+  try {
+    const user = await getUserById(userId);
+
+    if (!user) {
+      return res.status(500).json({ error: "Няма такъв потребител!" });
+    }
+
+    return user;
+  } catch (error) {
+    return res.status(500).json({ error });
+  }
+}
+
 async function httpAddCartItem(req, res) {
   const { cartItem } = req.body;
   const userId = req.params.userId;
@@ -61,18 +77,14 @@ async function httpAddCartItem(req, res) {
 }
 
 async function httpUpdateCartItem(req, res) {}
-async function httpRemoveCartItem(req, res) {
-  console.log("hi");
-  const userId = req.params.userId;
-  try {
-    const user = await getUserById(userId);
 
-    if (!user) {
-      return res.status(500).json({ error: "Няма такъв потребител!" });
-    }
-  } catch (error) {
-    return res.status(500).json({ error });
-  }
+// Remove cart item
+async function httpRemoveCartItem(req, res) {
+  const { userId, cartItemId } = req.params;
+
+  const user = await getUser(res, userId);
+  await removeCartItem(user._id, cartItemId);
+  return res.status(200).json({ success: true });
 }
 
 module.exports = {

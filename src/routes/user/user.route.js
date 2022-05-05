@@ -16,7 +16,7 @@ userRouter.post("/", httpCreateProfile);
 userRouter.post("/:id/delivery-address", httpCreateDeliveryAddress);
 //Cart
 userRouter.post("/:userId/cart", httpAddCartItem);
-userRouter.post("/:userId/cart/:itemId", httpUpdateCartItem);
-userRouter.delete("/:userId/cart/:itemId", httpRemoveCartItem);
+userRouter.post("/:userId/cart/:cartItemId", httpUpdateCartItem);
+userRouter.delete("/:userId/cart/:cartItemId", httpRemoveCartItem);
 
 module.exports = userRouter;

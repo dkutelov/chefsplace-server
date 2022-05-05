@@ -146,7 +146,26 @@ async function createCartItem(userId, cartItem) {
 
 async function updateCartItem(userId, cartItem) {}
 
-async function removeCartItem(userId, cartItem) {}
+async function removeCartItem(userId, cartItemId) {
+  console.log(userId, cartItemId);
+  try {
+    const profile = await User.updateOne(
+      { _id: userId },
+      {
+        $pull: {
+          cart: {
+            productId: cartItemId,
+          },
+        },
+      }
+    );
+    return profile;
+  } catch (error) {
+    throw new Error({
+      message: "Грешка при запис данни!",
+    });
+  }
+}
 
 module.exports = {
   getUserById,
