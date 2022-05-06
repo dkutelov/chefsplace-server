@@ -122,12 +122,18 @@ async function createCartItem(userId, cartItem) {
   }
 
   //Already in cart
-  const existingCartItem = user.cart.find((x) => x.productId === productId);
+  const existingCartItem = user.cart.find(
+    (x) => x.productId.toString() === productId
+  );
 
+  // Existing item - overrides with the new quantity
   if (existingCartItem) {
     const { quantity } = cartItem;
-    existingCartItem.quantity += quantity;
-    user.save();
+    const res = await User.updateOne(
+      { _id: userId, "cart.productId": productId },
+      { $set: { "cart.$.quantity": +quantity } }
+    );
+
     return {
       success: true,
       message: "Продуктът е вече в количката! Количеството е актуализирано!",
