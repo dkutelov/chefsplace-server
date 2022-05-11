@@ -72,6 +72,12 @@ const productSchema = new Schema({
     type: String,
     trim: true,
   },
+  weigth: {
+    type: Number,
+    required: true,
+    min: 0,
+    default: 1,
+  },
 });
 
 module.exports = model("Products", productSchema);
