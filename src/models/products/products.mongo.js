@@ -72,7 +72,7 @@ const productSchema = new Schema({
     type: String,
     trim: true,
   },
-  weigth: {
+  weight: {
     type: Number,
     required: true,
     min: 0,

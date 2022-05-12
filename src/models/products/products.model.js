@@ -12,21 +12,36 @@ async function getAllProducts() {
         reducedPrice: 1,
         onPromotion: 1,
         maxQuantity: 1,
+        weight: 1,
       }
     )
     .sort({ created: -1 });
 
-  productData = productData.map((p) => ({
-    id: p._id,
-    name: p.name,
-    mainImage: p.images[0] || "",
-    category: p.category,
-    price: p.price,
-    reducedPrice: p.reducedPrice,
-    onPromotion: p.onPromotion,
-    maxQuantity: p.maxQuantity,
-  }));
-
+  productData = productData.map((p) => {
+    const {
+      _id,
+      name,
+      weight,
+      maxQuantity,
+      reducedPrice,
+      price,
+      category,
+      onPromotion,
+      images,
+    } = p;
+    console.log(p);
+    return {
+      id: _id,
+      name,
+      mainImage: images[0] || "",
+      category,
+      price,
+      reducedPrice,
+      onPromotion,
+      maxQuantity,
+      weight,
+    };
+  });
   return productData;
 }
 
