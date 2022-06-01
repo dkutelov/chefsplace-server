@@ -4,6 +4,7 @@ const {
   findProfileById,
   findProfileByUid,
   createDeliveryAddress,
+  deleteDeliveryAddress,
   createCartItem,
   removeCartItem,
   createInvoiceAddress,
@@ -45,6 +46,21 @@ async function httpCreateDeliveryAddress(req, res) {
     return res.status(201).json(createdAddress);
   } else {
     return res.status(400).json({ error: "Грешка. Опитай отново!" });
+  }
+}
+
+async function httpDeleteDeliveryAddress(req, res) {
+  const userId = req.params.id;
+  const addressId = req.params.addressId;
+
+  const result = await deleteDeliveryAddress(userId, addressId);
+
+  if (result) {
+    return res.status(200).json({ message: "Адресът е изтрит успешно!" });
+  } else {
+    return res
+      .status(400)
+      .json({ error: "Грешка при изтриването на адреса. Опитай отново!" });
   }
 }
 
@@ -103,6 +119,7 @@ module.exports = {
   httpCreateProfile,
   httpGetProfile,
   httpCreateDeliveryAddress,
+  httpDeleteDeliveryAddress,
   httpAddCartItem,
   httpUpdateCartItem,
   httpRemoveCartItem,

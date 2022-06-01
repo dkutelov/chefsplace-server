@@ -93,6 +93,37 @@ async function createDeliveryAddress(userId, address) {
   return newAddress;
 }
 
+async function deleteDeliveryAddress(userId, addressId) {
+  // Delete address
+  const deletedAddress = await Address.findOneAndDelete({ _id: addressId });
+
+  // Update user
+  await User.updateOne(
+    { _id: userId },
+    { $pull: { deliveryAddress: deletedAddress._id } }
+  );
+
+  // Handle default
+  if (deletedAddress && deletedAddress.isDefault) {
+    const user = await User.findById(userId);
+    console.log("user", user);
+    if (user.deliveryAddress && user.deliveryAddress.length > 0) {
+      console.log("😊");
+      const newDefaultId = user.deliveryAddress[0];
+      await Address.updateOne(
+        {
+          _id: newDefaultId,
+        },
+        {
+          isDefault: true,
+        }
+      );
+    }
+  }
+
+  return deletedAddress;
+}
+
 async function createInvoiceAddress(userId, address) {
   const user = await User.findOne({ _id: userId });
 
@@ -208,6 +239,7 @@ module.exports = {
   findProfileById,
   findProfileByUid,
   createDeliveryAddress,
+  deleteDeliveryAddress,
   createCartItem,
   updateCartItem,
   removeCartItem,
