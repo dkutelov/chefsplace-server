@@ -6,6 +6,7 @@ const {
   httpCreateProfile,
   httpGetProfile,
   httpCreateDeliveryAddress,
+  httpEditDeliveryAddress,
   httpDeleteDeliveryAddress,
   httpAddCartItem,
   httpUpdateCartItem,
@@ -16,6 +17,7 @@ const {
 userRouter.get("/", httpGetProfile);
 userRouter.post("/", httpCreateProfile);
 userRouter.post("/:id/delivery-address", httpCreateDeliveryAddress);
+userRouter.post("/:id/delivery-address/:addressId", httpEditDeliveryAddress);
 userRouter.delete(
   "/:id/delivery-address/:addressId",
   httpDeleteDeliveryAddress

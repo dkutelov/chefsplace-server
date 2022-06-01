@@ -93,6 +93,13 @@ async function createDeliveryAddress(userId, address) {
   return newAddress;
 }
 
+async function updateDeliveryAddress(userId, addressId, address) {
+  //Handle isDefault
+  const result = await Address.updateOne({ _id: addressId }, { ...address });
+  console.log({ result });
+  return result;
+}
+
 async function deleteDeliveryAddress(userId, addressId) {
   // Delete address
   const deletedAddress = await Address.findOneAndDelete({ _id: addressId });
@@ -239,6 +246,7 @@ module.exports = {
   findProfileById,
   findProfileByUid,
   createDeliveryAddress,
+  updateDeliveryAddress,
   deleteDeliveryAddress,
   createCartItem,
   updateCartItem,

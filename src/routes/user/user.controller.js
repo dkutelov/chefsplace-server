@@ -4,6 +4,7 @@ const {
   findProfileById,
   findProfileByUid,
   createDeliveryAddress,
+  updateDeliveryAddress,
   deleteDeliveryAddress,
   createCartItem,
   removeCartItem,
@@ -47,6 +48,15 @@ async function httpCreateDeliveryAddress(req, res) {
   } else {
     return res.status(400).json({ error: "Грешка. Опитай отново!" });
   }
+}
+
+async function httpEditDeliveryAddress(req, res) {
+  const { address } = req.body;
+  const userId = req.params.id;
+  const addressId = req.params.addressId;
+
+  const result = await updateDeliveryAddress(userId, addressId, address);
+  return res.status(200).json({ message: "Актуализиран адрес на доставка!" });
 }
 
 async function httpDeleteDeliveryAddress(req, res) {
@@ -119,6 +129,7 @@ module.exports = {
   httpCreateProfile,
   httpGetProfile,
   httpCreateDeliveryAddress,
+  httpEditDeliveryAddress,
   httpDeleteDeliveryAddress,
   httpAddCartItem,
   httpUpdateCartItem,
