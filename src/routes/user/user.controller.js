@@ -6,6 +6,7 @@ const {
   createDeliveryAddress,
   createCartItem,
   removeCartItem,
+  createInvoiceAddress,
 } = require("../../models/user/user.model");
 
 async function httpGetProfile(req, res) {
@@ -40,6 +41,17 @@ async function httpCreateDeliveryAddress(req, res) {
   const { address } = req.body;
   const userId = req.params.id;
   const createdAddress = await createDeliveryAddress(userId, address);
+  if (createdAddress) {
+    return res.status(201).json(createdAddress);
+  } else {
+    return res.status(400).json({ error: "Грешка. Опитай отново!" });
+  }
+}
+
+async function httpCreateInvoiceAddress(req, res) {
+  const { address } = req.body;
+  const userId = req.params.id;
+  const createdAddress = await createInvoiceAddress(userId, address);
   if (createdAddress) {
     return res.status(201).json(createdAddress);
   } else {
@@ -94,4 +106,5 @@ module.exports = {
   httpAddCartItem,
   httpUpdateCartItem,
   httpRemoveCartItem,
+  httpCreateInvoiceAddress,
 };

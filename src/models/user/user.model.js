@@ -53,9 +53,7 @@ async function findProfileById(id) {
   }
 }
 
-async function removeDefaultAddress(userId, addressType) {
-  const user = await User.findOne({ _id: userId });
-
+async function removeDefaultAddress(user, addressType) {
   if (addressType === "delivery") {
     const deliveryAddresses = user.deliveryAddress;
 
@@ -65,19 +63,50 @@ async function removeDefaultAddress(userId, addressType) {
         { isDefault: false }
       );
     });
+  } else if (addressType === "invoice") {
+    const invoiceAddresses = user.invoiceAddress;
+
+    invoiceAddresses.forEach(async (addressId) => {
+      const address = await Address.updateOne(
+        { _id: addressId },
+        { isDefault: false }
+      );
+    });
   }
 }
 
 async function createDeliveryAddress(userId, address) {
-  const newAddress = await Address.create({ ...address });
+  const user = await User.findOne({ _id: userId });
 
   if (address.isDefault) {
-    await removeDefaultAddress(userId, "delivery");
+    await removeDefaultAddress(user, "delivery");
+  } else if (!user.deliveryAddress || user.deliveryAddress.length === 0) {
+    address.isDefault = true;
   }
+
+  const newAddress = await Address.create({ ...address });
 
   await User.updateOne(
     { _id: userId },
     { $push: { deliveryAddress: newAddress._id } }
+  );
+  return newAddress;
+}
+
+async function createInvoiceAddress(userId, address) {
+  const user = await User.findOne({ _id: userId });
+
+  if (address.isDefault) {
+    await removeDefaultAddress(user, "invoice");
+  } else if (!user.invoiceAddress || user.invoiceAddress.length === 0) {
+    address.isDefault = true;
+  }
+
+  const newAddress = await Address.create({ ...address });
+
+  await User.updateOne(
+    { _id: userId },
+    { $push: { invoiceAddress: newAddress._id } }
   );
   return newAddress;
 }
@@ -182,4 +211,5 @@ module.exports = {
   createCartItem,
   updateCartItem,
   removeCartItem,
+  createInvoiceAddress,
 };

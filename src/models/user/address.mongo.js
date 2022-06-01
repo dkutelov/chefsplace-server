@@ -37,7 +37,7 @@ const addressSchema = new Schema({
     type: String,
     trim: true,
   },
-  streetNumber: {
+  number: {
     type: String,
     trim: true,
   },

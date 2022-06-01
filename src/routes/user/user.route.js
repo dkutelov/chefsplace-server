@@ -9,11 +9,13 @@ const {
   httpAddCartItem,
   httpUpdateCartItem,
   httpRemoveCartItem,
+  httpCreateInvoiceAddress,
 } = require("./user.controller");
 
 userRouter.get("/", httpGetProfile);
 userRouter.post("/", httpCreateProfile);
 userRouter.post("/:id/delivery-address", httpCreateDeliveryAddress);
+userRouter.post("/:id/invoice-address", httpCreateInvoiceAddress);
 //Cart
 userRouter.post("/:userId/cart", httpAddCartItem);
 userRouter.post("/:userId/cart/:cartItemId", httpUpdateCartItem);
