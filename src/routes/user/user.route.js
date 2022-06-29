@@ -16,13 +16,17 @@ const {
 
 userRouter.get("/", httpGetProfile);
 userRouter.post("/", httpCreateProfile);
+
+//Delivery Addresses
 userRouter.post("/:id/delivery-address", httpCreateDeliveryAddress);
 userRouter.post("/:id/delivery-address/:addressId", httpEditDeliveryAddress);
 userRouter.delete(
   "/:id/delivery-address/:addressId",
   httpDeleteDeliveryAddress
 );
+//Invoice Addresses
 userRouter.post("/:id/invoice-address", httpCreateInvoiceAddress);
+
 //Cart
 userRouter.post("/:userId/cart", httpAddCartItem);
 userRouter.post("/:userId/cart/:cartItemId", httpUpdateCartItem);

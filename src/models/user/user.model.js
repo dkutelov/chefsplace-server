@@ -1,5 +1,6 @@
 const User = require("./user.mongo");
 const Address = require("./address.mongo");
+const InvoiceAddress = require("./invoice-address.mongo");
 const Products = require("../products/products.mongo");
 
 function transformProfile(p) {
@@ -31,9 +32,10 @@ async function createProfile(profile) {
 
 async function findProfileByUid(uid) {
   try {
-    const profile = await User.findOne({ uid }, { __v: 0 }).populate(
-      "deliveryAddress"
-    );
+    const profile = await User.findOne({ uid }, { __v: 0 }).populate([
+      "deliveryAddress",
+      "invoiceAddress",
+    ]);
     return { profile };
   } catch (error) {
     console.log(error);
@@ -44,7 +46,8 @@ async function findProfileByUid(uid) {
 async function findProfileById(id) {
   try {
     const profile = await User.findById(id, { __v: 0 }).populate(
-      "deliveryAddress"
+      "deliveryAddress",
+      "invoiceAddress"
     );
     return { profile };
   } catch (error) {
@@ -140,13 +143,13 @@ async function createInvoiceAddress(userId, address) {
     address.isDefault = true;
   }
 
-  const newAddress = await Address.create({ ...address });
+  const newInvoiceAddress = await InvoiceAddress.create({ ...address });
 
   await User.updateOne(
     { _id: userId },
-    { $push: { invoiceAddress: newAddress._id } }
+    { $push: { invoiceAddress: newInvoiceAddress._id } }
   );
-  return newAddress;
+  return newInvoiceAddress;
 }
 
 // User Cart

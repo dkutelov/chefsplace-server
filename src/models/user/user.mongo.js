@@ -32,7 +32,7 @@ const userSchema = new Schema({
   invoiceAddress: [
     {
       type: Schema.Types.ObjectId,
-      ref: "Address",
+      ref: "InvoiceAddress",
     },
   ],
   cart: [
