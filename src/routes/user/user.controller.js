@@ -9,6 +9,8 @@ const {
   createCartItem,
   removeCartItem,
   createInvoiceAddress,
+  updateInvoiceAddress,
+  deleteInvoiceAddress,
 } = require("../../models/user/user.model");
 
 async function httpGetProfile(req, res) {
@@ -78,10 +80,35 @@ async function httpCreateInvoiceAddress(req, res) {
   const { address } = req.body;
   const userId = req.params.id;
   const createdAddress = await createInvoiceAddress(userId, address);
+
   if (createdAddress) {
     return res.status(201).json(createdAddress);
   } else {
     return res.status(400).json({ error: "Грешка. Опитай отново!" });
+  }
+}
+
+async function httpEditInvoiceAddress(req, res) {
+  const { address } = req.body;
+  const userId = req.params.id;
+  const addressId = address._id;
+
+  const result = await updateInvoiceAddress(userId, addressId, address);
+  return res.status(200).json({ message: "Актуализиран адрес на доставка!" });
+}
+
+async function httpDeleteInvoiceAddress(req, res) {
+  const userId = req.params.id;
+  const addressId = req.params.addressId;
+
+  const result = await deleteInvoiceAddress(userId, addressId);
+
+  if (result) {
+    return res.status(200).json({ message: "Адресът е изтрит успешно!" });
+  } else {
+    return res
+      .status(400)
+      .json({ error: "Грешка при изтриването на адреса. Опитай отново!" });
   }
 }
 
@@ -135,4 +162,6 @@ module.exports = {
   httpUpdateCartItem,
   httpRemoveCartItem,
   httpCreateInvoiceAddress,
+  httpEditInvoiceAddress,
+  httpDeleteInvoiceAddress,
 };

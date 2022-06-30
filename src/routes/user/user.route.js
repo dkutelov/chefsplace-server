@@ -12,6 +12,8 @@ const {
   httpUpdateCartItem,
   httpRemoveCartItem,
   httpCreateInvoiceAddress,
+  httpEditInvoiceAddress,
+  httpDeleteInvoiceAddress,
 } = require("./user.controller");
 
 userRouter.get("/", httpGetProfile);
@@ -26,6 +28,8 @@ userRouter.delete(
 );
 //Invoice Addresses
 userRouter.post("/:id/invoice-address", httpCreateInvoiceAddress);
+userRouter.post("/:id/invoice-address/:addressId", httpEditInvoiceAddress);
+userRouter.delete("/:id/invoice-address/:addressId", httpDeleteInvoiceAddress);
 
 //Cart
 userRouter.post("/:userId/cart", httpAddCartItem);

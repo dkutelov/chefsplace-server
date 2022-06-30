@@ -29,7 +29,6 @@ async function getAllProducts() {
       onPromotion,
       images,
     } = p;
-    console.log(p);
     return {
       id: _id,
       name,

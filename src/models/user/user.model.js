@@ -70,7 +70,7 @@ async function removeDefaultAddress(user, addressType) {
     const invoiceAddresses = user.invoiceAddress;
 
     invoiceAddresses.forEach(async (addressId) => {
-      const address = await Address.updateOne(
+      const address = await InvoiceAddress.updateOne(
         { _id: addressId },
         { isDefault: false }
       );
@@ -96,6 +96,7 @@ async function createDeliveryAddress(userId, address) {
   return newAddress;
 }
 
+//TODO: Handle default change
 async function updateDeliveryAddress(userId, addressId, address) {
   //Handle isDefault
   const result = await Address.updateOne({ _id: addressId }, { ...address });
@@ -150,6 +151,48 @@ async function createInvoiceAddress(userId, address) {
     { $push: { invoiceAddress: newInvoiceAddress._id } }
   );
   return newInvoiceAddress;
+}
+
+//TODO: Handle default change
+//TODO: Only same user can edit!
+async function updateInvoiceAddress(userId, addressId, address) {
+  const result = await InvoiceAddress.updateOne(
+    { _id: addressId },
+    { ...address }
+  );
+  return result;
+}
+
+async function deleteInvoiceAddress(userId, addressId) {
+  // Delete address
+  const deletedAddress = await InvoiceAddress.findOneAndDelete({
+    _id: addressId,
+  });
+
+  // Update user
+  await User.updateOne(
+    { _id: userId },
+    { $pull: { invoiceAddress: deletedAddress._id } }
+  );
+
+  // Handle default
+  if (deletedAddress && deletedAddress.isDefault) {
+    const user = await User.findById(userId);
+
+    if (user.invoiceAddress && user.invoiceAddress.length > 0) {
+      const newDefaultId = user.invoiceAddress[0];
+      await Address.updateOne(
+        {
+          _id: newDefaultId,
+        },
+        {
+          isDefault: true,
+        }
+      );
+    }
+  }
+
+  return deletedAddress;
 }
 
 // User Cart
@@ -255,4 +298,6 @@ module.exports = {
   updateCartItem,
   removeCartItem,
   createInvoiceAddress,
+  updateInvoiceAddress,
+  deleteInvoiceAddress,
 };
