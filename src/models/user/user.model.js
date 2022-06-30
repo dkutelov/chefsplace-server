@@ -45,10 +45,10 @@ async function findProfileByUid(uid) {
 
 async function findProfileById(id) {
   try {
-    const profile = await User.findById(id, { __v: 0 }).populate(
+    const profile = await User.findById(id, { __v: 0 }).populate([
       "deliveryAddress",
-      "invoiceAddress"
-    );
+      "invoiceAddress",
+    ]);
     return { profile };
   } catch (error) {
     console.log(error);
