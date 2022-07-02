@@ -35,6 +35,7 @@ async function findProfileByUid(uid) {
     const profile = await User.findOne({ uid }, { __v: 0 }).populate([
       "deliveryAddress",
       "invoiceAddress",
+      "orders",
     ]);
     return { profile };
   } catch (error) {
@@ -48,6 +49,7 @@ async function findProfileById(id) {
     const profile = await User.findById(id, { __v: 0 }).populate([
       "deliveryAddress",
       "invoiceAddress",
+      "orders",
     ]);
     return { profile };
   } catch (error) {
