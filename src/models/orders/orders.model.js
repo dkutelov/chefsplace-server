@@ -1,10 +1,27 @@
-const Order = require("./orders.mongo");
+const orders = require("./orders.mongo");
 const users = require("../user/user.mongo");
 const deliveryAddresses = require("../user/address.mongo");
 const invoiceAddresses = require("../user/invoice-address.mongo");
 
-async function getOrdersByUser(userId) {
-  return null;
+async function getOrders(limit = 20, skip = 0) {
+  return await orders
+    .find({}, { __v: 0 })
+    .sort({
+      orderNumber: -1,
+    })
+    .populate(["deliveryAddressId", "invoiceAddressId"])
+    .limit(limit)
+    .skip(skip);
+}
+
+async function getOrdersByUser(userId, limit = 10, skip = 0) {
+  return orders
+    .find({ userId }, { __v: 0 })
+    .sort({
+      orderNumber: -1,
+    })
+    .limit(limit)
+    .skip(skip);
 }
 
 async function addOrder(userId, order) {
@@ -39,7 +56,7 @@ async function addOrder(userId, order) {
       delete order.invoiceAddressId;
     }
 
-    const res = await Order.create(order);
+    const res = await orders.create(order);
     if (res) {
       await users.updateOne({ _id: userId }, { $push: { orders: res._id } });
 
@@ -55,6 +72,7 @@ async function addOrder(userId, order) {
 }
 
 module.exports = {
+  getOrders,
   getOrdersByUser,
   addOrder,
 };

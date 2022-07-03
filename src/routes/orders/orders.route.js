@@ -2,8 +2,13 @@ const express = require("express");
 
 const orderRouter = express.Router();
 
-const { httpGetOrdersByUser, httpAddOrder } = require("./orders.controller");
+const {
+  httpGetOrdersByUser,
+  httpAddOrder,
+  httpGetOrders,
+} = require("./orders.controller");
 
+orderRouter.get("/", httpGetOrders);
 orderRouter.get("/:userId", httpGetOrdersByUser);
 orderRouter.post("/:userId", httpAddOrder);
 
