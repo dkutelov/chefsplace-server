@@ -40,12 +40,12 @@ async function addOrder(userId, order) {
     }
 
     const res = await Order.create(order);
-    console.log(res);
     if (res) {
       await users.updateOne({ _id: userId }, { $push: { orders: res._id } });
 
       return {
         success: "Поръчката беше записана успешно!",
+        orderNumber: res.orderNumber,
       };
     }
   } catch (error) {

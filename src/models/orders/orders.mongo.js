@@ -1,6 +1,10 @@
 const { Schema, model } = require("mongoose");
+const { AutoIncrement } = require("../../services/mongo");
 
-const orderSchema = new Schema({
+const OrderSchema = new Schema({
+  orderNumber: {
+    type: Number,
+  },
   userId: {
     type: Schema.Types.ObjectId,
     ref: "user",
@@ -62,4 +66,15 @@ const orderSchema = new Schema({
   },
 });
 
-module.exports = model("Order", orderSchema);
+OrderSchema.pre("save", async function (next) {
+  var doc = this;
+  const currentNumberOfOrders = await Order.countDocuments();
+
+  console.log(currentNumberOfOrders);
+  this.orderNumber = currentNumberOfOrders + 1;
+
+  next();
+});
+
+const Order = model("Order", OrderSchema);
+module.exports = Order;
