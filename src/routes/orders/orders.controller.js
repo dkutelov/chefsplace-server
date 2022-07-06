@@ -1,7 +1,8 @@
 const {
   getOrdersByUser,
-  addOrder,
+  addUserOrder,
   getOrders,
+  addGuestOrder,
 } = require("../../models/orders/orders.model");
 
 async function httpGetOrders(req, res) {
@@ -19,12 +20,24 @@ async function httpGetOrdersByUser(req, res) {
   return res.status(200).json(await getOrdersByUser(userId));
 }
 
-async function httpAddOrder(req, res) {
+async function httpAddUserOrder(req, res) {
   const userId = req.params.userId;
   const { order } = req.body;
 
   try {
-    const successMessage = await addOrder(userId, order);
+    const successMessage = await addUserOrder(userId, order);
+    return res.status(200).json(successMessage);
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ error: error.message });
+  }
+}
+
+async function httpAddGuestOrder(req, res) {
+  const { order } = req.body;
+
+  try {
+    const successMessage = await addGuestOrder(order);
     return res.status(200).json(successMessage);
   } catch (error) {
     console.log(error);
@@ -34,6 +47,7 @@ async function httpAddOrder(req, res) {
 
 module.exports = {
   httpGetOrdersByUser,
-  httpAddOrder,
+  httpAddUserOrder,
   httpGetOrders,
+  httpAddGuestOrder,
 };

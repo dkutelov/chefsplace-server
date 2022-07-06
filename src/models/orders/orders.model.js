@@ -24,7 +24,7 @@ async function getOrdersByUser(userId, limit = 10, skip = 0) {
     .skip(skip);
 }
 
-async function addOrder(userId, order) {
+async function addUserOrder(userId, order) {
   //check if user exists
   const user = await users.findOne({ _id: userId });
   if (!user) {
@@ -71,8 +71,48 @@ async function addOrder(userId, order) {
   }
 }
 
+async function addGuestOrder(order) {
+  //check if delivery address exists
+  const deliveryAddress = await deliveryAddresses.findOne({
+    _id: order.deliveryAddressId,
+  });
+
+  if (!deliveryAddress) {
+    throw new Error("Няма такъв адрес на доставка");
+  }
+
+  //if invoice address, check if exists
+  if (order.invoiceAddressId) {
+    const invoiceAddress = await invoiceAddresses.findOne({
+      _id: order.invoiceAddressId,
+    });
+
+    if (!invoiceAddress) {
+      throw new Error("Няма такъв адрес на доставка");
+    }
+  }
+  //save order to db
+  try {
+    if (!order.invoiceAddressId) {
+      delete order.invoiceAddressId;
+    }
+
+    const res = await orders.create(order);
+    if (res) {
+      return {
+        success: "Поръчката беше записана успешно!",
+        orderNumber: res.orderNumber,
+      };
+    }
+  } catch (error) {
+    console.log(error);
+    throw new Error("Поръчката не беше запазена");
+  }
+}
+
 module.exports = {
   getOrders,
   getOrdersByUser,
-  addOrder,
+  addUserOrder,
+  addGuestOrder,
 };

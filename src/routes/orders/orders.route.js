@@ -4,12 +4,14 @@ const orderRouter = express.Router();
 
 const {
   httpGetOrdersByUser,
-  httpAddOrder,
+  httpAddUserOrder,
   httpGetOrders,
+  httpAddGuestOrder,
 } = require("./orders.controller");
 
 orderRouter.get("/", httpGetOrders);
+orderRouter.post("/", httpAddGuestOrder);
 orderRouter.get("/:userId", httpGetOrdersByUser);
-orderRouter.post("/:userId", httpAddOrder);
+orderRouter.post("/:userId", httpAddUserOrder);
 
 module.exports = orderRouter;
