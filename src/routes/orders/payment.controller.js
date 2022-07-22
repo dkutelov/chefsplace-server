@@ -1,5 +1,5 @@
 const stripeClient = require("stripe")(process.env.STRIPE_KEY);
-console.log("stripe", process.env.STRIPE_KEY);
+
 async function httpCardPayment(req, res) {
   const { data } = req.body;
   const { token, amount } = data;
