@@ -1,23 +1,7 @@
 const products = require("./products.mongo");
 
-async function getAllProducts() {
-  let productData = await products
-    .find(
-      {},
-      {
-        name: 1,
-        images: 1,
-        category: 1,
-        price: 1,
-        reducedPrice: 1,
-        onPromotion: 1,
-        maxQuantity: 1,
-        weight: 1,
-      }
-    )
-    .sort({ created: -1 });
-
-  productData = productData.map((p) => {
+function mapProductData(productData) {
+  return productData.map((p) => {
     const {
       _id,
       name,
@@ -41,7 +25,23 @@ async function getAllProducts() {
       weight,
     };
   });
-  return productData;
+}
+
+async function getAllProducts(query = {}) {
+  let productData = await products
+    .find(query, {
+      name: 1,
+      images: 1,
+      category: 1,
+      price: 1,
+      reducedPrice: 1,
+      onPromotion: 1,
+      maxQuantity: 1,
+      weight: 1,
+    })
+    .sort({ created: -1 });
+
+  return mapProductData(productData);
 }
 
 async function getProductById(id) {

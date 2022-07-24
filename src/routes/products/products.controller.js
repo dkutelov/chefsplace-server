@@ -6,7 +6,21 @@ const {
 
 // GET requests
 async function httpGetAllProducts(req, res) {
-  return res.status(200).json(await getAllProducts());
+  try {
+    return res.status(200).json(await getAllProducts());
+  } catch (error) {
+    return res.status(400).json({ error: error.toString() });
+  }
+}
+
+async function httpGetPromoProducts(req, res) {
+  try {
+    const promoProducts = await getAllProducts({ onPromotion: true });
+    res.status(200).json(promoProducts);
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ error: error.toString() });
+  }
 }
 
 async function httpGetProductById(req, res) {
@@ -24,4 +38,5 @@ module.exports = {
   httpGetAllProducts,
   httpSaveProduct,
   httpGetProductById,
+  httpGetPromoProducts,
 };

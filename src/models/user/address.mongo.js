@@ -61,11 +61,10 @@ const addressSchema = new Schema({
     type: String,
     trim: true,
   },
-  eik: { type: String, trim: true },
-  vatNumber: { type: String, trim: true },
+  // eik: { type: String, trim: true },
+  // vatNumber: { type: String, trim: true },
   isDefault: {
     type: Boolean,
-    trim: true,
   },
 });
 

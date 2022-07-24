@@ -43,7 +43,6 @@ const invoiceAddressSchema = new Schema({
   },
   isDefault: {
     type: Boolean,
-    trim: true,
   },
 });
 
